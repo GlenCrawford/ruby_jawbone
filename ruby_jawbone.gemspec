@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = RubyJawbone::VERSION
   spec.authors       = ["Glen Crawford"]
   spec.email         = ["glencraw4d@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{Reads data files for Jawbone users and provides information about activity, sleep, etc.}
+  spec.description   = ""
+  spec.homepage      = "https://github.com/GlenCrawford/ruby_jawbone"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
