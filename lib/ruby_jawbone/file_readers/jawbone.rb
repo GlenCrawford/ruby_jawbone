@@ -30,9 +30,9 @@ module RubyJawbone
             results[:sleep] << {
               :date => date,
 
-              :s_bedtime => row[20], # Time entered sleep mode.
-              :s_asleep_time => row[16], # Time fell asleep.
-              :s_awake_time => row[18], # Final time woken up.
+              :s_bedtime => parse_time(row[20].to_i, date), # Time entered sleep mode.
+              :s_asleep_time => parse_time(row[16].to_i, date), # Time fell asleep.
+              :s_awake_time => parse_time(row[18].to_i, date), # Final time woken up.
 
               :total_time_asleep => row[23].to_i, # Total time asleep during sleep period (in seconds).
               :total_time_in_light_sleep => row[24].to_i, # Time in light sleep during sleep period (in seconds).
@@ -46,9 +46,9 @@ module RubyJawbone
 
       protected
 
-      # The Jawbone data stores data in an offset before or after midnight (in seconds):
-      # * If negative, before midnight.
-      # * If positive, after midnight.
+      # The Jawbone data stores times in an offset before or after midnight (in seconds):
+      # * If negative: before midnight.
+      # * If positive: after midnight.
       #
       # Examples:
       # * Timestamp -3648 for period 21/01/2014 = 10:59pm on 20/01/2014 (before midnight the day before).
