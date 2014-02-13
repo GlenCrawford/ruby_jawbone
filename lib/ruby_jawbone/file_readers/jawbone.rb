@@ -4,12 +4,6 @@ require 'csv'
 module RubyJawbone
   module FileReaders
     class Jawbone < Base
-      attr_reader :file
-
-      def initialize(file)
-        @file = file
-      end
-
       def parse_file
         {:activity => [], :sleep => []}.tap do |results|
           CSV.foreach(file, :headers => :first_row) do |row|
