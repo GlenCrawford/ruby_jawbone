@@ -4,6 +4,14 @@ describe RubyJawbone::FileReaders::Jawbone do
   let(:file) { double "File" }
   let(:file_reader) { RubyJawbone::FileReaders::Jawbone.new(file) }
 
+  describe "#parse_file" do
+    #
+  end
+
+  describe "#parse_row" do
+    #
+  end
+
   describe "#parse_time" do
     it "returns the correct time for a negative timestamp (before midnight)" do
       timestamp = -3648
