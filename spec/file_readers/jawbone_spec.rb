@@ -3,17 +3,30 @@ require 'spec_helper'
 describe RubyJawbone::FileReaders::Jawbone do
   let(:file) { double "File" }
   let(:file_reader) { RubyJawbone::FileReaders::Jawbone.new(file) }
-
   let(:file_rows) do
     {
+      :header => "DATE,age,bmr,body_fat,gender,height,m_active_time,m_calories,m_distance,m_inactive_time,m_lcat,m_lcit,m_steps,m_total_calories,m_workout_count,m_workout_time,s_asleep_time,s_awake,s_awake_time,s_awakenings,s_bedtime,s_count,s_deep,s_duration,s_light,s_quality,s_rem,weight".split(","),
       :sleep_tracked_and_fell_asleep_after_midnight => "20140119,42.586301369863016,1676.467993150685,,0,1.75,9644.0,609.769522205,13579.0,24960.0,2838.0,12540.0,17157.0,2286.237515355685,0.0,0.0,14039.0,2237.0,36727.0,1.0,12427.0,1.0,9022.0,22063.0,13041.0,59.0,0.0,65.0".split(","),
       :sleep_tracked_and_fell_asleep_before_midnight => "20140121,42.59178082191781,1676.430979452055,,0,1.75,6126.0,402.170217812061,8984.0,30180.0,2779.0,10140.0,11171.0,2078.601197264116,0.0,0.0,-2881.0,5222.0,29052.0,3.0,-3648.0,1.0,10140.0,27478.0,17338.0,72.0,0.0,65.0".split(","),
       :sleep_not_tracked => "20140205,42.632876712328766,1676.1533767123287,,0,1.75,5946.0,396.927790523,8792.0,31800.0,2419.0,7440.0,10921.0,2073.081167235329,0.0,0.0,,,,,,,,,,,,65.0".split(",")
     }
   end
+  # Stitch the lines into a file.
+  let(:file_contents) { file_rows.values.map{|line| line.join(",")}.join("\n") }
 
   describe "#parse_file" do
-    #
+    before do
+      expect(File).to receive(:open).and_return(file_contents)
+    end
+
+    it "receives the data file, parses the data lines (not the header) and returns the activity and sleep data for each line" do
+      expect(file_reader).to receive(:parse_row).exactly(3).times.with(an_instance_of(CSV::Row)).and_return(["Activity #1", "Sleep #1"], ["Activity #2", "Sleep #2"], ["Activity #3", "Sleep #3"])
+
+      expect(file_reader.parse_file).to eq({
+        :activity => ["Activity #1", "Activity #2", "Activity #3"],
+        :sleep => ["Sleep #1", "Sleep #2", "Sleep #3"]
+      })
+    end
   end
 
   describe "#parse_row" do
