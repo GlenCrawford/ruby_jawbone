@@ -15,16 +15,24 @@ module RubyJawbone
     def process_file(file)
       parsed_data = FileReaders::Jawbone.new(file).parse_file
 
-      activity = parsed_data[:activity].map do |parsed_activity|
-        DataSet::Activity.new(*parsed_activity.values)
-      end
+      parsed_data.each do |data_type, data_sets|
+        # Need to think about some of this terminlogy around "data sets" and so on soon.
+        data_set_klass = {
+          :activity => DataSet::Activity,
+          :sleep => DataSet::Sleep
+        }[data_type]
 
-      sleep = parsed_data[:sleep].map do |parsed_sleep|
-        DataSet::Sleep.new(*parsed_sleep.values)
+        data_sets.each do |data_set|
+          add_to_collection data_type, data_set_klass.new(*data_set.values)
+        end
       end
+    end
 
-      @activity += activity
-      @sleep += sleep
+    private
+
+    def add_to_collection(collection_name, value)
+      # Raise here if invalid collection name.
+      send(collection_name).push(value)
     end
   end
 end
